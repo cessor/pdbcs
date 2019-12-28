@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Python Debugger CheatSheet</title>
+    <style type="text/css">
+        @import url('https://fonts.googleapis.com/css?family=Open+Sans|Inconsolata');
+
+        body {
+            margin: 1em;
+            color: #444;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+        }
+
+        h1, h2 {
+            text-align: center;
+            margin: 0.2em;
+        }
+
+        h3 {
+            border-bottom: 1px dashed #999;
+        }
+
+        img {
+            height: 32px;
+        }
+
+        section {
+            font-family: 'Open Sans', sans-serif;
+            border: 1px solid #ddd;
+            border-bottom: 2px solid #999;
+            border-right: 2px solid #999;
+            padding: 0.5em;
+            margin: 1em 0.5em;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        table tr td {
+            font-size: 9pt;
+            vertical-align: top;
+            padding: 0.2em;
+        }
+
+        table tr td:first-child {
+            font-family: 'Inconsolata', 'Courier New', monospace;
+            padding-left: 0.5em;
+            min-width: 120px;
+        }
+/*
+        table tr td table tr td{
+            max-width: 280px;
+        }*/
+    </style>
+</head>
+<body>
+
+    <section class="navigation">
+        <h2 id="navigation">
+                <img src="navigation.png"><br>Navigation</h2>
+        <table>
+            <tr>
+                <td><strong>c</strong> or <strong>cont</strong>inue</td>
+                <td> Resume execution of the program to next breakpoint.</td></tr>
+            <tr>
+                <td><strong>s</strong>tep</td>
+                <td> Resume execution to the next line or function call.<br><strong>Step</strong> will also &quot;Step Into&quot; called functions and stop inside.</td></tr>
+            <tr>
+                <td><strong>n</strong>ext</td>
+                <td> Resume execution to the next line.<br><strong>Next</strong> will skip over called functions and stop after them.</td></tr>
+            <tr>
+                <td><strong>d</strong>own</td>
+                <td> Move down one frame.</td></tr>
+            <tr>
+                <td><strong>d</strong>own <em>count</em></td>
+                <td> Move down more frames.</td></tr>
+            <tr>
+                <td><strong>u</strong>p</td>
+                <td> Move up one frame.</td></tr>
+            <tr>
+                <td><strong>u</strong>p <em>count</em></td>
+                <td> Move up more frames.</td></tr>
+            <tr>
+                <td><strong>unt</strong>il</td>
+                <td> Resume execution until a line after this one is reached. Stop when the current frame returns.</td></tr>
+            <tr>
+                <td><strong>unt</strong>il <em>linenumber</em></td>
+                <td> Resume execution until the line after the specified one is reached. Stop when the current frame returns.</td></tr>
+            <tr>
+                <td><strong>r</strong>eturn</td>
+                <td> Resume execution until the current function returns.</td></tr>
+            <tr>
+                <td><strong>j</strong>ump <em>lineno</em></td>
+                <td> In the bottom most frame, set the next line to execute.<br>Helps to re-execute or skip some code.<br>You can't jump into a for-loop or out of a finally clause.</td></tr>
+        </table>
+    </section>
+
+    <section class="intervention">
+        <h2 id="intervention"><img src="screwdriver.png"><br>Intervention</h2>
+        <table>
+            <tr>
+                <td><strong>interact</strong></td>
+                <td> Start an interpreter with all the local and global variables in the current scope.</td></tr>
+            <tr>
+                <td><em>statement</em></td>
+                <td> Execute the statement.</td></tr>
+            <tr>
+                <td><strong>!</strong> <em>statement</em></td>
+                <td> Prefix with ! if the first word is a debugger command.</td></tr>
+            <tr>
+                <td>global <em>statement</em></td>
+                <td> Set a global variable.</td></tr>
+            <tr>
+                <td><strong>run</strong> [args ...], <br><strong>restart</strong> [args ...]</td>
+                <td> Restart the running program with these arguments.<br>Breakpoints are preserved.</td></tr>
+            <tr>
+                <td><strong>alias</strong> <em>name</em> <em>command</em></td>
+                <td> Create a new command with the given name.<br>A command can be any legal program.<br>Aliases can override debugger commands.<br>To get them back, remove the alias.</td></tr>
+            <tr>
+                <td><strong>alias</strong></td>
+                <td> List existing aliases.</td></tr>
+            <tr>
+                <td><strong>alias</strong> <em>name</em></td>
+                <td> Inspect given alias.</td></tr>
+            <tr>
+                <td><strong>unalias</strong> <em>name</em></td>
+                <td> Delete this alias.</td></tr>
+        </table>
+    </section>
+
+
+    <section class="code">
+        <h2 id="inspection-code"><img src="code.png"><br>Inspection: Code</h2>
+        <table>
+            <tr>
+                <td><strong>l</strong>ist .</td>
+                <td> Print 11 lines of code around the current line.</td></tr>
+            <tr>
+                <td><strong>l</strong>ist</td>
+                <td> Continues printing.<br>If it has not yet printed, it prints 11 lines around the current line.</td></tr>
+            <tr>
+                <td><strong>l</strong>ist <em>linenumber</em></td>
+                <td> Print 11 lines around that line.</td></tr>
+            <tr>
+                <td><strong>l</strong>ist <em>first</em> <em>last</em></td>
+                <td> Print this range.</td></tr>
+            <tr>
+                <td><strong>l</strong>ist <em>line</em> <em>count</em></td>
+                <td> Print this range.</td></tr>
+            <tr>
+                <td><strong>l</strong>ong<strong>l</strong>ist (<strong>ll</strong>)</td>
+                <td> List the complete code for this function or frame.</td></tr>
+            <tr>
+                <td><strong>source</strong> <em>object</em></td>
+                <td> Try to display source code for this object.
+                    <br>An object must be: module, class, method, function,
+                    <br> traceback, frame, or code object</td></tr>
+        </table>
+    </section>
+
+    <section class="data">
+        <h2 id="inspection-data"><img src="data.png"><br>Inspection: Data</h2>
+        <table>
+            <tr>
+                <td><strong>a</strong>rgs</td>
+                <td> Print the argument list of the current function</td></tr>
+            <tr>
+                <td><strong>p</strong> <em>expression</em></td>
+                <td> Evaluate the expression and print its value.</td></tr>
+            <tr>
+                <td><strong>pp</strong> <em>expression</em></td>
+                <td> Pretty print it.</td></tr>
+            <tr>
+                <td><strong>print(...)</strong></td>
+                <td> An actual print.</td></tr>
+            <tr>
+                <td><strong>whatis</strong> <em>object</em></td>
+                <td> Print the type of the expression.</td></tr>
+            <tr>
+                <td><strong>display</strong></td>
+                <td> List all display expressions.</td></tr>
+            <tr>
+                <td><strong>display</strong> <em>expression</em></td>
+                <td> Display the expression's value, if it changed since the last execution,</td></tr>
+            <tr>
+                <td><strong>undisplay</strong></td>
+                <td> Clear all display expressions.</td></tr>
+            <tr>
+                <td><strong>undisplay</strong> <em>expression</em></td>
+                <td> Remove this display expression.</td></tr>
+        </table>
+    </section>
+
+    <section class="breakpoints">
+        <h2 id="inspection-breakpoints">
+        <img src="microscope.png"><br>
+        Inspection: Breakpoints</h2>
+        <h3 id="adding-and-removing-breakpoints">Adding and Removing Breakpoints</h3>
+        <table>
+            <tr>
+                <td><strong>b</strong>reak</td>
+                <td> Lists all breakpoints.<br>Returns Format:  Break, Breakpoints, Hit Count, Ignore Count, Condition</td></tr>
+            <tr>
+                <td><strong>b</strong>reak <em>linenumber</em></td>
+                <td> Break there.</td></tr>
+            <tr>
+                <td><strong>b</strong>reak <em>file</em>:<em>linenumber</em></td>
+                <td> Break there, but in a different file.</td></tr>
+            <tr>
+                <td><strong>b</strong>reak <em>function</em></td>
+                <td> Break at first executable statement in function.</td></tr>
+            <tr>
+                <td><strong>break</strong> <em>location</em>, <em>condition</em></td>
+                <td> Break there if condition is met, but remove breakpoint after hitting it.</td></tr>
+            <tr>
+                <td><strong>tbreak</strong> <em>location</em><br>[,<em>condition</em>]</td>
+                <td> Break there if condition is met, but remove breakpoint after hitting it.<br>Syntax is the same as for break.</td></tr>
+            <tr>
+                <td><strong>cl</strong>ear</td>
+                <td> Remove all breakpoints</td></tr>
+            <tr>
+                <td><strong>cl</strong>ear <em>location</em></td>
+                <td> Remove all specific breakpoints at this position</td></tr>
+            <tr>
+                <td><strong>cl</strong>ear <em>breakpoints</em></td>
+                <td> Remove all specific breakpoints</td></tr>
+        </table>
+    </section>
+    <section>
+        <h3 id="toggling-breakpoints">Toggling Breakpoints</h3>
+        <table>
+            <tr>
+                <td><strong>disable</strong></td>
+                <td> Disable all breakpoints.<br>(Note: This is a guess)</td></tr>
+            <tr>
+                <td><strong>disable</strong> <em>breakpoints</em></td>
+                <td> Don't break there.<br>Specify list of breakpoint numbers</td></tr>
+            <tr>
+                <td><strong>enable</strong></td>
+                <td> Reenable all breakpoints.<br>(Note: This is a guess)</td></tr>
+            <tr>
+                <td><strong>enable</strong> <em>breakpoints</em></td>
+                <td> Reenable disabled breakpoints.</td></tr>
+            <tr>
+                <td><strong>ignore</strong> <em>breakpoint</em></td>
+                <td> Ignore breakpoint</td></tr>
+            <tr>
+                <td><strong>ignore</strong> <em>breakpoint</em> <em>count</em></td>
+                <td> Ignore breakpoint so many times.<br>The ignore count is decremented upon hitting the breakpoint.</td></tr>
+        </table>
+    </section>
+    <section>
+        <h3 id="altering-breakpoints">Altering Breakpoints</h3>
+        <table>
+            <tr>
+                <td><strong>condition</strong> <em>breakpoint</em></td>
+                <td> Remove all conditions from this breakpoint.</td></tr>
+            <tr>
+                <td><strong>condition</strong> <em>breakpoint</em> <em>condition</em></td>
+                <td> Install a new condition.</td></tr>
+            <tr>
+                <td><strong>commands</strong> <em>breakpoint</em></td>
+                <td> Prompts for a list of commands for the breakpoint.<br>For example, you can specify to print a local variable. <a href="#navigation">Navigation</a> commands will resume execution of the program.</td></tr>
+            <tr>
+                <td><strong>commands</strong> <em>breakpoint</em><br>-&gt; (com) <strong>end;</strong></td>
+                <td> Specifying <strong>end</strong> will clear the commands list.</td></tr>
+        </table>
+    </section>
+
+    <section>
+        <h2 id="orientation"><img src="orientation.png"><br>Orientation</h2>
+        <table>
+            <tr>
+                <td><strong>h</strong>elp</td>
+                <td> Print available commands.</td></tr>
+            <tr>
+                <td><strong>h</strong>elp <em>command</em></td>
+                <td> Print help about a command.</td></tr>
+            <tr>
+                <td><strong>h</strong>elp pdb</td>
+                <td> Print docstring documentation of debugging module.</td></tr>
+            <tr>
+                <td><strong>h</strong>elp exec</td>
+                <td> Print help about a command.</td></tr>
+            <tr>
+                <td><strong>w</strong>here</td>
+                <td> Print a stacktrace.<br>The current frame is at the bottom.<br>An arrow indicates the current frame.<br>Commands are executed against this frame as their context.</td></tr>
+            <tr>
+                <td><strong>q</strong>uit</td>
+                <td> Guess what this does.</td></tr>
+        </table>
+    </section>
+
+    <section class="symbols">
+        <h2 id="symbols">Symbols</h2>
+        <table>
+            <tr>
+                <td><em>position</em></td>
+                <td> Format: <code>[filename:]lineno</code><br> Break there.</td></tr>
+            <tr>
+                <td><em>function</em></td>
+                <td> Break at first executable statement in function.</td></tr>
+            <tr>
+                <td><em>location</em></td>
+                <td> Format: position or function</td></tr>
+            <tr>
+                <td><em>condition</em></td>
+                <td> Only break there if this expression evaluates to True.</td></tr>
+            <tr>
+                <td><em>breakpoint</em></td>
+                <td> Format:  <code>bpnumber</code><br>  The breakpoint number</td></tr>
+            <tr>
+                <td><em>breakpoints</em></td>
+                <td> Format: <code>bpnumber [bpnumber ...]</code><br> List of breakpoint numbers.</td></tr>
+        </table>
+    </section>
+
+    <section class="notes">
+        <h2 id="notation-and-notes">Notation and Notes</h2>
+        <table>
+            <tr>
+                <td><strong>c</strong>ommand</td>
+                <td>In the debugger prompt, you can write this command. <br> The bold part is the shortcut alias.</td></tr>
+            <tr>
+                <td>(Pdb)</td>
+                <td> Debugger command prompt.</td></tr>
+            <tr>
+                <td>(com)</td>
+                <td> Breakpoint commands prompt.</td></tr>
+            <tr>
+                <td>-&gt;</td>
+                <td> The current line in the current frame.</td></tr>
+            <tr>
+                <td>&gt;&gt;</td>
+                <td> Original line where exception was raised or propagated.</td></tr>
+            <tr>
+                <td>Aliases:</td>
+                <td> Aliases may be nested.<br>Replaceable parameters can be indicated by %1, %2,
+            <br> and so on, while %* is replaced by all parameters.</td></tr>
+        </table>
+        <p>
+            <h4>Notation for break and tbreak</h4>
+            <code><strong>b</strong>reak [position [, condition]]</code><br>
+            Parameters for breakpoints are <em>location or function</em>, and an optional <em>condition</em>.<br>
+            Set a breakpoint there, but only if this condition is met.
+        </p>
+    </section>
+
+
+    <section>
+        <small>
+                <p>Taken from the original documentathin here:
+                <a href="https://docs.python.org/3.6/library/pdb.html">https://docs.python.org/3.6/library/pdb.html</a></p>
+                <p>This sheet was made by Johannes Hofmeister, 2017, http://cessor.de. <br>
+                   Let me know if you found this helpful :)</p>
+                <p><a href="https://thenounproject.com/search/?q=screwdriver&i=45422">Screwdriver</a> by useiconic.com from the Noun Project.
+                <!-- <a href="https://thenounproject.com/search/?q=sextant&i=645306">Sextant</a> by Marc Serre, </p> -->
+        </small>
+    </section>
+</body>
+</html>
